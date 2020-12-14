@@ -3,16 +3,27 @@
     "version": "0.0.0",
     "description": "RESTful Web Server and Single Page Application",
     "author": {
-        "name": "",
-        "email": ""
+        "name": "Pam Savira",
+        "email": "savi2586@stthomas.edu"
     },
+    "contributors": [
+        {
+            "name": "Pam Savira",
+            "email": "savi2586@stthomas.edu"
+        },
+        {
+            "name": "Hannah Balut",
+            "email": "balu2673@stthomas.edu"
+        }
+    ],
     "main": "server.js",
     "repository": {
         "type": "git",
         "url": ""
     },
     "dependencies": {
+        "body-parser": "^1.19.0",
         "express": "^4.17.1",
-        "sqlite3": "^4.1.0"
+        "sqlite3": "^4.2.0"
     }
 }
