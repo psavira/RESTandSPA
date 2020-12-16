@@ -25,10 +25,95 @@
     <script type="application/javascript" src="scripts/app.js"></script>
     <!-- End: Application -->
 </head>
+
 <body onload="init()">
+    <h1>St. Paul Crime Map</h1>
+    <nav>
+        <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    </nav>
+
     <!-- Main app -->
     <div id="app">
         <div id="leafletmap"></div>
+        <div id="inputs">
+            click on the markers for neighborhood crime data. <br/>
+            Address
+            <input type="text" v-model="map.address"/>
+            <button type="button" @click="addressPop">Go</button> <br/>
+            <!--Delete incident markers
+            <button type="button" @click="deleteIncidentMarkers">Delete</button>-->
+        </div>
+        <br/><br/><br/><br/>
+
+        <div id="tableContainer">
+            <table class="right_header">
+                <th>Key</th>
+                <tr style="background-color: red;"><td>Violent Crimes</td></tr>
+                <tr style="background-color: orange;"><td>Property Crimes</td></tr>
+                <tr style="background-color: yellow;"><td>Drug Offenses</td></tr>
+                <tr style="background-color: white;"><td>Others</td></tr>
+            </table>
+            <table>
+                <thead>
+					<tr>
+						<th>Date</th>
+						<th>Time</th>
+						<th>Neighborhood</th>
+						<th>Address</th>
+						<th>Incident</th>
+					</tr>
+                </thead>
+                <tbody>
+					<tr v-for="crime in incidents">
+						<td :style="crime.style"> {{ crime.date }}</td>
+						<td :style="crime.style"> {{ crime.time }}</td>
+						<td :style="crime.style"> {{ crime.neighborhood_number }}</td>
+						<td :style="crime.style"> {{ crime.block }}</td>
+						<td :style="crime.style" :style=tableColor(crime)> {{ crime.incident }}</td> <!-- -->
+						</tr>
+				</tbody>
+            </table>
+        </div>
+
+
+
+        <div id="app" class="right_header">
+			<form onsubmit="updateCheckboxes(this); return false;">
+				<input type="reset" onclick="window.location.reload()"> <input id="submit" type="submit">
+				<br/><br/>
+				<input type="text" name="numCrimes" v-bind:value="numCrimes"> # of crimes visible
+				<br/>
+				<br/>
+				<input type="time" name="startTime" v-bind:value="startTime"> Begin Time
+				<br/>
+				<input type="time" name="endTime" v-bind:value="endTime"> End Time
+				<br/><br/>
+				<input type="date" name="startDate" v-bind:value="startDate"> Begin Date
+				<br/>
+				<input type="date" name="endDate" v-bind:value="endDate"> End Date
+                <br/><br/>
+                <ul style="list-style-type:none;">
+                    <li><input type="checkbox" value="Robbery" v-model="Robbery"> Robbery<br></li>
+                    <li><input type="checkbox" value="Murder" v-model="Murder"> Murder<br></li>
+                    <li><input type="checkbox" value="Rape" v-model="Rape"> Rape<br></li>
+                    <li><input type="checkbox" value="Vandalism" v-model="Vandalism"> Vandalism<br></li>
+                    <li><input type="checkbox" value="Burglary" v-model="Burglary"> Burglary<br></li>
+                    <li><input type="checkbox" value="Theft" v-model="Theft"> Theft<br></li>
+                    <li><input type="checkbox" value="Narcotics" v-model="Narcotics"> Narcotics<br></li>
+                </ul>
+                <br/><br/>
+				<ul style="list-style-type:none;">
+					<li v-for="neighborhood of neighborhoods">
+					<input type="checkbox" name="neighborhoods" v-bind:value="neighborhood" checked/> {{ neighborhood }}
+					</li>
+				</ul>
+                <br/><br/><br/><br/>
+			</form>
+		</div>
+
+
+
     </div>
 </body>
 </html>
