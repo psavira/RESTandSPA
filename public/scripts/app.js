@@ -2,23 +2,23 @@ let app;
 let map;
 let neighborhood_markers = 
 [
-    {location: [44.942068, -93.020521], marker: null, count:0}, //put count at the beginning
-    {location: [44.977413, -93.025156], marker: null, count:0},
-    {location: [44.931244, -93.079578], marker: null, count:0},
-    {location: [44.956192, -93.060189], marker: null, count:0},
-    {location: [44.978883, -93.068163], marker: null, count:0},
-    {location: [44.975766, -93.113887], marker: null, count:0},
-    {location: [44.959639, -93.121271], marker: null, count:0},
-    {location: [44.947700, -93.128505], marker: null, count:0},
-    {location: [44.930276, -93.119911], marker: null, count:0},
-    {location: [44.982752, -93.147910], marker: null, count:0},
-    {location: [44.963631, -93.167548], marker: null, count:0},
-    {location: [44.973971, -93.197965], marker: null, count:0},
-    {location: [44.949043, -93.178261], marker: null, count:0},
-    {location: [44.934848, -93.176736], marker: null, count:0},
-    {location: [44.913106, -93.170779], marker: null, count:0},
-    {location: [44.937705, -93.136997], marker: null, count:0},
-    {location: [44.949203, -93.093739], marker: null, count:0}
+    {count:0, location: [44.942068, -93.020521], marker: null},
+    {count:0, location: [44.977413, -93.025156], marker: null},
+    {count:0, location: [44.931244, -93.079578], marker: null},
+    {count:0, location: [44.956192, -93.060189], marker: null},
+    {count:0, location: [44.978883, -93.068163], marker: null},
+    {count:0, location: [44.975766, -93.113887], marker: null},
+    {count:0, location: [44.959639, -93.121271], marker: null},
+    {count:0, location: [44.947700, -93.128505], marker: null},
+    {count:0, location: [44.930276, -93.119911], marker: null},
+    {count:0, location: [44.982752, -93.147910], marker: null},
+    {count:0, location: [44.963631, -93.167548], marker: null},
+    {count:0, location: [44.973971, -93.197965], marker: null},
+    {count:0, location: [44.949043, -93.178261], marker: null},
+    {count:0, location: [44.934848, -93.176736], marker: null},
+    {count:0, location: [44.913106, -93.170779], marker: null},
+    {count:0, location: [44.937705, -93.136997], marker: null},
+    {count:0, location: [44.949203, -93.093739], marker: null}
 ];
 
 //MAP and MARKERS
@@ -35,8 +35,8 @@ function neighborhoodMarkers() {
                     neighborhood_markers[n].marker = marker;
             }
             
-        }).catch(error => {
-            console.log(error);
+        }).catch(err => {
+            console.log(err);
         });
     
     $.getJSON("http://localhost:8000/incidents")
@@ -51,8 +51,8 @@ function neighborhoodMarkers() {
                 popup.setContent(updatedPopup);
             }
             app.incidents = incidentData; //populate table
-        }).catch(error => {
-            console.log(error);
+        }).catch(err => {
+            console.log(err);
         });
     }
 
@@ -69,8 +69,8 @@ function addressPop(){
         } else {
             alert(app.map.address + "not found");
         }
-    }).catch(error => {
-        console.log(error);
+    }).catch(err => {
+        console.log(err);
     });
 }
 
@@ -128,8 +128,8 @@ function init() {
         $(result.features).each(function(key, value) {
             district_boundary.addData(value);
         });
-    }).catch((error) => {
-        console.log('Error:', error);
+    }).catch((err) => {
+        console.log('Error:', err);
     });
 
     neighborhoodMarkers();
