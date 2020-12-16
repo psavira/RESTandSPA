@@ -125,7 +125,7 @@ app.get('/incidents', (req, res) => { //NOT QUITE WORKING YET
     //start date
     if(req.query.start_date!==undefined) {
 		if(whereQuery==="") {
-			whereQuery = " WHERE (date_time >= "+"'"+ req.query.start_date+"T00:00:00"+"')";
+			whereQuery = "WHERE (date_time >= "+"'"+ req.query.start_date+"T00:00:00"+"')";
 		} else {
 			whereQuery = whereQuery + " AND (date_time >= "+"'"+req.query.start_date+"T"+"00:00:00')";
 		}
@@ -134,7 +134,7 @@ app.get('/incidents', (req, res) => { //NOT QUITE WORKING YET
     //end date
     if(req.query.end_date!==undefined) {
 		if(whereQuery==="") {
-			whereQuery = " WHERE ( date_time <= "+"'"+ req.query.end_date+"T"+"23:59:59')";
+			whereQuery = "WHERE ( date_time <= "+"'"+ req.query.end_date+"T"+"23:59:59')";
 		} else {
 			whereQuery = whereQuery + " AND ( date_time <= "+ "'"+req.query.end_date+"T"+"23:59:59')";
 		}
@@ -144,7 +144,7 @@ app.get('/incidents', (req, res) => { //NOT QUITE WORKING YET
     if(req.query.code!==undefined) {
         var codes=req.query.code.split(",");
         if(whereQuery==="") {
-            whereQuery = " WHERE (code="+codes[0];;
+            whereQuery = "WHERE (code="+codes[0];;
         } else {
             whereQuery= whereQuery + " AND (code="+codes[0];
         }
@@ -158,7 +158,7 @@ app.get('/incidents', (req, res) => { //NOT QUITE WORKING YET
     if(req.query.grid!==undefined) {
 		var grids= req.query.grid.split(",");
 		if(whereQuery==="") {
-			whereQuery = " WHERE (police_grid="+grids[0];
+			whereQuery = "WHERE (police_grid="+grids[0];
 		} else {
 			whereQuery = whereQuery+" AND (police_grid="+grids[0];
 		}
@@ -182,8 +182,9 @@ app.get('/incidents', (req, res) => { //NOT QUITE WORKING YET
 		whereQuery = whereQuery+")";
 	}
 
-    console.log(whereQuery);
-    db.each("SELECT * FROM Incidents" + whereQuery + "ORDER BY date_time DESC LIMIT ?", [limit], (err, row) => {
+    let fullQuery = "SELECT * FROM Incidents " + whereQuery + "ORDER BY date_time DESC LIMIT ?";
+    console.log(fullQuery);
+    db.each("SELECT * FROM Incidents " + whereQuery + "ORDER BY date_time DESC LIMIT ?", [limit], (err, row) => {
         incidentObj = {};
         incidentObj["case_number"] = row.case_number;
         var dateAndTime = row.date_time.split("T");
@@ -202,13 +203,73 @@ app.get('/incidents', (req, res) => { //NOT QUITE WORKING YET
 });
 
 // REST API: PUT /new-incident
+
 // Respond with 'success' or 'error'
+
 app.put('/new-incident', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
 
-    res.status(200).type('txt').send('success');
-});
+    //check for case_number
+    if(req.body.hasOwnProperty("case_number") == false) {
+        res.status(500).send("Need case number");
+    }
 
+    //create new incident object
+    var new_incident = {
+        case_number: req.body.case_number,
+        date_time: "",
+        code: "",
+        incident: "",
+        police_grid: "",
+        neighborhood_number: "",
+        block: ""
+    }
+
+    //populate object if fields exist
+    if(req.body.hasOwnProperty("date")) {
+        new_incident["date_time"] = req.body.date;
+    }
+    if(req.body.hasOwnProperty("time")) {
+        new_incident["date_time"] = new_incident.date_time + "T" + req.body.time;
+    }
+    if(req.body.hasOwnProperty("code")) {
+        new_incident["code"] = parseInt(req.body.code);
+    }
+    if(req.body.hasOwnProperty("incident")) {
+        new_incident["incident"] = req.body.incident;
+    }
+    if(req.body.hasOwnProperty("police_grid")) {
+        new_incident["police_grid"] = parseInt(req.body.police_grid);
+    }
+    if(req.body.hasOwnProperty("neighborhood_number")) {
+        new_incident["neighborhood_number"] = req.body.neighborhood_number;
+    }
+    if(req.body.hasOwnProperty("block")) {
+        new_incident["block"] = req.body.block;
+    }
+
+    //check if case number already exists
+    db.all("SELECT * FROM Incidents WHERE case_number=?", [new_incident.case_number], (err, row) => {
+        if(row.length > 0) {
+            res.status(500).send("The case number already exists");
+        } else if (err) {
+            res.status(500).send("error with database");
+        } else {
+            //add to database
+            db.run("INSERT INTO incidents (case_number, date_time, code, incident, police_grid, neigborhood_number, block) VALUES (?, ?, ?, ?, ?, ?, ?", [new_incident.case_number, new_incident.date_time, new_incident.code, new_incident.incident, new_incident.police_grid, new_incident.neighborhood_number, new_incident.block], (err) => {
+                if(err){
+                    res.status(500).send("error inserting incident into database");
+                    console.log("error when inserting incident into database");
+                    console.log(err);
+                } else {
+                    res.status(200).type('txt').send('success');
+                }
+            });
+        }
+
+    });
+
+});
 
 // Create Promise for SQLite3 database SELECT query 
 function databaseSelect(query, params) {
