@@ -57,21 +57,53 @@ function neighborhoodMarkers() {
     }
 
 
-function addressPop(){
+function popAddress(){
     getJSON('https://nominatim.openstreetmap.org/search?format=json&country=United States&state=MN&city=St.Paul&street=' + app.map.address)
     .then(data => {
         if(data.length>0) {
             app.map.center.lat = data[0].lat;
             app.map.center.lng = data[0].lng; 
-            map.setZoom(15); //zoom
+            map.setZoom(17); //zoom
             map.panZoom([app.map.center.lat, app.map.center.lng]); //pan
-            updateCrimeTable(1000);
+            popTable(1000); //update table here
         } else {
-            alert(app.map.address + "not found");
+            alert("invalid address");
         }
     }).catch(err => {
         console.log(err);
     });
+}
+
+function popTable(limit) {
+    var getNeighborhoodLatLng = []; //array of lat,lng
+    for(i=0; i<neighborhood_markers.length; i++) {
+        if((map.getBounds()).contains(L.latlng(neighborhood_markers[i].location[0], neighborhood_markers[i].location[1]))) {
+            getNeighborhoodLatLng.push(i+1);
+        }
+    }
+
+    var incidentNeighborhoodAPI = "http://localhost:8000/incidents?neighborhood=" + getNeighborhoodLatLng.join(',');
+    if(limit!="") {
+        incidentNeighborhoodAPI = incidentNeighborhoodAPI+"&limit="+limit;
+    }
+
+
+
+    /*$.getJSON("http://localhost:8000/incidents")
+        .then(incidentData => {
+            let count = 0;
+            for(let n in incidentData){
+                neighborhood_markers[(incidentData[n].neighborhood_number)-1].count++;
+            }
+            for(let n in neighborhood_markers){
+                let popup = neighborhood_markers[n].marker.getPopup();
+                let updatedPopup = popup.getContent().replace(' (crime count)', ': '+ neighborhood_markers[n].count);
+                popup.setContent(updatedPopup);
+            }
+            app.incidents = incidentData; //populate table
+        }).catch(err => {
+            console.log(err);
+        });*/
 }
 
 function init() {
@@ -92,20 +124,39 @@ function init() {
                     se: {lat: 44.883658, lng: -92.993787}
                 }
             },
-            Robbery: true,
             Murder:true,
             Rape:true,
+            Robbery: true,
             Vandalism: true,
             Burglary: true,
             Theft: true,
             Narcotics:true,
+
+            ConwayBattlecreekHighwood: true,
+            GreaterEastSide: true,            
+            WestSide: true,
+            DaytonsBluff: true,
+            PaynePhalen: true,
+            NorthEnd: true,
+            ThomasDaleFrogtown: true,
+            SummitUniversity: true,
+            WestSeventh: true,
+            Como: true,
+            HamlineMidway: true,
+            StAnthony: true,
+            UnionPark: true,
+            MacalesterGroveland: true,
+            Highland: true,
+            SummitHill: true,
+            CapitolRiver: true,
+
             incidents:[],
             incidentMarkers:[],
             neighborhoods:[],
             showNeighborhoods:[],
             startTime:"00:00:01",
             endTime:"23:59:59",
-            numCrimes: 1000, //default to 1000
+            limit: 1000, //default to 1000
             startDate: "2020-01-01",
             endDate: new Date().toISOString().slice(0,10)
         }
@@ -118,7 +169,7 @@ function init() {
         maxZoom: 18
     }).addTo(map);
     map.setMaxBounds([[44.883658, -93.217977], [45.008206, -92.993787]]);
-    //map.on?
+    //map on?
     
     let district_boundary = new L.geoJson();
     district_boundary.addTo(map);
@@ -153,6 +204,35 @@ function getJSON(url) {
 
 
 //TABLE
+function tableColor(crime) {
+    for(crime in app.incident) {
+        if (crime.incident.has("Murder", "Rape", "Robberies", "Assaults")) {
+            return "background-color: red;";
+        } else if (crime.incident.has("Bulglaries", "Thefts", "Arson", "Property Damage", "Graffiti")) {
+            return "background-color: orange;";
+        } else if (crime.incident.has("Narcotics")) {
+            return "background-color: yellow;";
+        } else {
+            return "background-color: white;";
+        }
+    }
+}
+
+/*function tableColor(crime) {
+    for(crime in app.incident) {
+        if (crime.incident.has("Murder", "Rape", "Robberies", "Assaults")) {
+            return "red;";
+        } else if (crime.incident.has("Bulglaries", "Thefts", "Arson", "Property Damage", "Graffiti")) {
+            return "orange;";
+        } else if (crime.incident.has("Narcotics")) {
+            return "yellow;";
+        } else {
+            return "white;";
+        }
+    }
+}*/
+
+
 function tableRowColor(code) {
     if(code<500 || code>=810 && code<900) { //murders, rapes, robberies, etc || domestic assaults
         return 'red';

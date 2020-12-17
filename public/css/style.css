@@ -18,3 +18,21 @@
 .yellow {
     background-color: yellow;
 }
+
+.white {
+    background-color: white;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border-spacing: 0;
+    background-color: white;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    position: relative;
+  }
