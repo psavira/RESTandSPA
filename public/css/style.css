@@ -2,6 +2,18 @@
     margin: 0 auto;
 }
 
+h1 {
+    color: #5D001E;
+}
+
+h2 {
+    color: #9A1750;
+}
+
+p {
+    color: #9A1750;
+}
+
 #leafletmap {
     width: 800px;  /* feel free to change this! */
     height: 600px; /* feel free to change this! */
@@ -34,4 +46,66 @@ table {
     border: 1px solid #dddddd;
     padding: 8px;
     position: relative;
+    text-align: center;
   }
+
+  tr {
+
+    border: 1px solid;
+
+    text-align: center;
+
+}
+
+#table{
+
+    border: 1px solid;
+
+    display:block;
+
+    float: left;
+
+    overflow-y:scroll;
+
+    height:20rem;
+
+    font-size: 1rem;
+
+    border-spacing: 1rem;
+
+ }
+
+ #leafletmap {
+
+    height: 40rem;
+
+    width: 50rem;
+
+    float:left;
+
+    margin: 20px auto;
+
+}
+
+body {
+
+    background-color: #E3E2DF;
+
+    font-size: 1rem;
+
+}
+
+ 
+
+#navigation {
+
+    text-align: center;
+
+    background-color: #EE4C7C;
+
+    color: #E3E2DF;
+
+    height: 3rem;
+
+}
+

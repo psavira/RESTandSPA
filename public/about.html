@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html>
-    
 <head>
-	<meta charset="utf-8">
-	<title>Crimes Searcher in St. Paul, MN</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-	<script type="application/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-
-	<!-- Leaflet API -->
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-    crossorigin=""></script>
-
-   <!-- Internal js -->
-	<script type="text/javascript" src="script/scripts.js"></script>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <title>St. Paul Crime Map</title>
 </head>
-
-<body onload="Init()">
-    
-    
+<body onload="init()">
+    <div id="navigation">
+        <a href="index.html" style="display: inline-block;">HOME</a> |
+        <header style="display: inline-block;">St. Paul Crime Statistics</header> |
+        <a href="about.html" style="display: inline-block;">ABOUT</a> 
+    </div>
+    <h1>Members:</h1>
+    <h2>Pam Savira</h2>
+    <img src="/img/PamSavira.jpg" alt="Pam Savira" width="500"/>
+    <p>"I am a junior studying Computer Science with minor in Statistics. I am from Surabaya, Indonesia. Fun fact, I changed my major from Neuroscience to Computer Science. One of the significant reasons behind it was that I got to know some cool CS major people from MATH128."</p>
+    <br\>
+    <h2>Hannah Balut</h2>
+    <img src="/img/HannahBalut.jpg" alt="Hannah Balut" width="500"/>
+    <p>"I am currently a senior majoring in computer science, minoring in Actuarial Science, and plan to be a software engineer after I graduate.  I enjoy spending time outside and play volleyball as much as possible.  Fun fact, back home I live on a lake so paddleboarding, fishing, and ice-skating are also hobbies of mine."</p>
+    <br\>
+    <br\>
+    <h1>Description of Tools:</h1>
+    <p>This project was divided into two sections.  The first part of the project consisted of creating a RESTful web server.  We used this to populate our table with the necessary data.  The second part of the project consisted of implemeting an interactive map using leaflet.  This map allows users to see where each neighborhood is with markers depicting how many crimes are within a certain range.  We also used the nominatim API to take user input and convert it to the corresponding address/latitude and longitude values.  Vue was used as the client-side framework in this project.</p>
+    <br\>
+    <br\>
+    <h1>Video Demonstration:</h1>
+    <div id="box">
+        <video width=100% height=auto controls>
+            <source src="Video_Demonstration.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+          </video>
+    </div>
+    <br\>
+    <br\>
+    <h1>Six Interesting Facts:</h1>
+    <p>1. From looking at the table, it seems more crimes happen at night.</p>
+    <p>2. From looking at the map, it seems that Capitol River neighborhood and Thomas/Dale(Frogtown) neighborhood have recently been the crime hotspots in St. Paul.</p>
+    <p>3. Proactive Police Visit seems to be the most common incident from looking at the table.</p>
+    <p>4. The outer areas of St. Paul seems to have less crimes.</p>
+    <p>5. On November 25th 2020, there were over 100 incidents.</p>
+    <p>6. There were more narcotic incidents on November 22nd than on November 25th.</p>
 </body>
+</html>
