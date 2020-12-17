@@ -37,8 +37,7 @@
     <div id="app">
         <div id="leafletmap"></div>
         <div id="inputs">
-            click on the markers for neighborhood crime data. <br/>
-            Address
+            <br/>Address
             <input type="text" v-model="map.address"/>
             <button type="button" @click="popAddress">Go</button> <br/>
             <!--Delete incident markers
@@ -49,9 +48,12 @@
         <div id="app" class="right_header">
 			
 			<form onsubmit="updateCheckboxes(this); return false;">
-				<input type="reset" onclick="window.location.reload()"> <input id="submit" type="submit">
-				<br/><br/>
-				<input type="text" name="limit" v-bind:value="limit"> # of crimes visible
+				<input type="reset" onclick="window.location.reload()"> <input id="submit" type="submit"><br/>
+                <input type="text" name="limit" v-bind:value="limit"> # of crimes visible<br/>
+                <input type="date" name="startDate" v-bind:value="startDate"> Start Date<br/>
+				<input type="date" name="endDate" v-bind:value="endDate"> End Date
+                <br/>
+                <br/>
 				<br/>
                 <br/>
                 <ul style="list-style-type:none;">
@@ -65,10 +67,26 @@
                 </ul>
                 <br/><br/>
                 <ul style="list-style-type:none;">
-					<li v-for="neighborhood of neighborhoods">
-					<input type="checkbox" name="neighborhoods" v-bind:value="neighborhood" checked/> {{ neighborhood }}
-					</li>
-				</ul>
+                    <li><input type="checkbox" value="ConwayBattlecreekHighwood" v-model="ConwayBattlecreekHighwood"> Conway/Battlecreek/Highwood<br></li>
+                    <li><input type="checkbox" value="GreaterEastSide" v-model="GreaterEastSide"> Greater East Side<br></li>
+                    <li><input type="checkbox" value="WestSide" v-model="WestSide"> West Side<br></li>
+                    <li><input type="checkbox" value="DaytonsBluff" v-model="DaytonsBluff"> Dayton's Bluff<br></li>
+                    <li><input type="checkbox" value="PaynePhalen" v-model="PaynePhalen"> Payne/Phalen<br></li>
+                    <li><input type="checkbox" value="NorthEnd" v-model="NorthEnd"> North End<br></li>
+                    <li><input type="checkbox" value="ThomasDaleFrogtown" v-model="ThomasDaleFrogtown"> Thomas/Dale(Frogtown)<br></li>
+                    <li><input type="checkbox" value="SummitUniversity" v-model="SummitUniversity"> Summit/University<br></li>
+                    <li><input type="checkbox" value="WestSeventh" v-model="WestSeventh"> West Seventh<br></li>
+                    <li><input type="checkbox" value="Como" v-model="Como"> Como<br></li>
+                    <li><input type="checkbox" value="HamlineMidway" v-model="HamlineMidway"> Hamline/Midway<br></li>
+                    <li><input type="checkbox" value="StAnthony" v-model="StAnthony"> St. Anthony<br></li>
+                    <li><input type="checkbox" value="UnionPark" v-model="UnionPark"> Union Park<br></li>
+                    <li><input type="checkbox" value="MacalesterGroveland" v-model="MacalesterGroveland"> Macalester-Groveland<br></li>
+                    <li><input type="checkbox" value="Highland" v-model="Highland"> Highland<br></li>
+                    <li><input type="checkbox" value="SummitHill" v-model="SummitHill"> Summit Hill<br></li>
+                    <li><input type="checkbox" value="CapitolRiver" v-model="CapitolRiver"> Capitol River<br></li>
+                </ul>
+
+
                 <br/><br/><br/><br/>
 				
 			</form>
@@ -100,9 +118,9 @@
 					<tr v-for="incident in incidents">
 						<td :style="incident.style"> {{ incident.date }}</td>
 						<td :style="incident.style"> {{ incident.time }}</td>
-						<td :style="incident.style"> {{ incident.neighborhood_number }}</td>
+						<td :style="incident.style"> {{ incident.name }}</td>
 						<td :style="incident.style"> {{ incident.block }}</td>
-						<td :style="incident.style" :style="tableColor(incident)"> {{ incident.incident }}</td>
+						<td :style="incident.style" :style=tableColor(incident)> {{ incident.incident }}</td>
 					</tr>
 				</tbody>
             </table>

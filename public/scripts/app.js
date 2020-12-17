@@ -2,46 +2,44 @@ let app;
 let map;
 let neighborhood_markers = 
 [
-    {count:0, location: [44.942068, -93.020521], marker: null},
-    {count:0, location: [44.977413, -93.025156], marker: null},
-    {count:0, location: [44.931244, -93.079578], marker: null},
-    {count:0, location: [44.956192, -93.060189], marker: null},
-    {count:0, location: [44.978883, -93.068163], marker: null},
-    {count:0, location: [44.975766, -93.113887], marker: null},
-    {count:0, location: [44.959639, -93.121271], marker: null},
-    {count:0, location: [44.947700, -93.128505], marker: null},
-    {count:0, location: [44.930276, -93.119911], marker: null},
-    {count:0, location: [44.982752, -93.147910], marker: null},
-    {count:0, location: [44.963631, -93.167548], marker: null},
-    {count:0, location: [44.973971, -93.197965], marker: null},
-    {count:0, location: [44.949043, -93.178261], marker: null},
-    {count:0, location: [44.934848, -93.176736], marker: null},
-    {count:0, location: [44.913106, -93.170779], marker: null},
-    {count:0, location: [44.937705, -93.136997], marker: null},
-    {count:0, location: [44.949203, -93.093739], marker: null}
+    {count:0, location: [44.942068, -93.020521], marker: null, name: "Conway/Battlecreek/Highwood"},
+    {count:0, location: [44.977413, -93.025156], marker: null, name: "Greater East Side"},
+    {count:0, location: [44.931244, -93.079578], marker: null, name: "West Side"},
+    {count:0, location: [44.956192, -93.060189], marker: null, name: "Dayton's Bluff"},
+    {count:0, location: [44.978883, -93.068163], marker: null, name: "Payne/Phalen"},
+    {count:0, location: [44.975766, -93.113887], marker: null, name: "North End"},
+    {count:0, location: [44.959639, -93.121271], marker: null, name: "Thomas/Dale(Frogtown)"},
+    {count:0, location: [44.947700, -93.128505], marker: null, name: "Summit/University"},
+    {count:0, location: [44.930276, -93.119911], marker: null, name: "West Seventh"},
+    {count:0, location: [44.982752, -93.147910], marker: null, name: "Como"},
+    {count:0, location: [44.963631, -93.167548], marker: null, name: "Hamline/Midway"},
+    {count:0, location: [44.973971, -93.197965], marker: null, name: "St. Anthony"},
+    {count:0, location: [44.949043, -93.178261], marker: null, name: "Union Park"},
+    {count:0, location: [44.934848, -93.176736], marker: null, name: "Macalester-Groveland"},
+    {count:0, location: [44.913106, -93.170779], marker: null, name: "Highland"},
+    {count:0, location: [44.937705, -93.136997], marker: null, name: "Summit Hill"},
+    {count:0, location: [44.949203, -93.093739], marker: null, name: "Capitol River"}
 ];
 
 //MAP and MARKERS
-function neighborhoodMarkers() {
+function neighborhoodMarkers() { //change this name
     $.getJSON("http://localhost:8000/neighborhoods")
         .then(data => {
             console.log(data[0]);
             for(let n in neighborhood_markers){
                 let latLng = neighborhood_markers[n].location;
-                let neighborhoodName = data[n].name;
-                let popup = L.popup({closeOnClick: false, autoClose: false}).setContent(neighborhoodName + ' (crime count)');
-                let marker = L.marker(latLng, {title: neighborhoodName, icon:L.icon({iconUrl: 'img/houses.png', iconSize: [25,25],
+                let popup = L.popup({closeOnClick: false, autoClose: false}).setContent(neighborhood_markers[n].name + ' (crime count)');
+                let marker = L.marker(latLng, {title: neighborhood_markers[n].name, icon:L.icon({iconUrl: 'img/houses.png', iconSize: [25,25],
                     popupAnchor: [0,0]})}).bindPopup(popup).addTo(map).openPopup();
                     neighborhood_markers[n].marker = marker;
             }
-            
+        app.neighborhoodName = neighborhood_markers;    
         }).catch(err => {
             console.log(err);
         });
     
     $.getJSON("http://localhost:8000/incidents")
         .then(incidentData => {
-            let count = 0;
             for(let n in incidentData){
                 neighborhood_markers[(incidentData[n].neighborhood_number)-1].count++;
             }
@@ -51,6 +49,9 @@ function neighborhoodMarkers() {
                 popup.setContent(updatedPopup);
             }
             app.incidents = incidentData; //populate table
+            for(let n in app.incidents){
+                app.incidents[n].name = neighborhood_markers[(app.incidents[n].neighborhood_number)-1].name; //to get neighborhood_name
+            }
         }).catch(err => {
             console.log(err);
         });
@@ -58,7 +59,7 @@ function neighborhoodMarkers() {
 
 
 function popAddress(){
-    getJSON('https://nominatim.openstreetmap.org/search?format=json&country=United States&state=MN&city=St.Paul&street=' + app.map.address)
+    getJSON('https://nominatim.openstreetmap.org/search?format=json&country=United States&state=MN&city=St. Paul&street=' + app.map.address)
     .then(data => {
         if(data.length>0) {
             app.map.center.lat = data[0].lat;
@@ -150,6 +151,7 @@ function init() {
             SummitHill: true,
             CapitolRiver: true,
 
+            neighborhoodName: [],
             incidents:[],
             incidentMarkers:[],
             neighborhoods:[],
@@ -233,7 +235,7 @@ function tableColor(crime) {
 }*/
 
 
-function tableRowColor(code) {
+/*function tableRowColor(code) {
     if(code<500 || code>=810 && code<900) { //murders, rapes, robberies, etc || domestic assaults
         return 'red';
     } else if(code>=500 && code<810 && code!=614 || code>=900 && code<1800) { //bulglaries, thefts || arson, property damage, graffiti
@@ -243,5 +245,5 @@ function tableRowColor(code) {
     } else {
         return 'white';
     }
-}
+}*/
 
