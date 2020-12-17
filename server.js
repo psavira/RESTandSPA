@@ -182,8 +182,8 @@ app.get('/incidents', (req, res) => { //NOT QUITE WORKING YET
 		whereQuery = whereQuery+")";
 	}
 
-    let fullQuery = "SELECT * FROM Incidents " + whereQuery + "ORDER BY date_time DESC LIMIT ?";
-    console.log(fullQuery);
+    //let fullQuery = "SELECT * FROM Incidents " + whereQuery + "ORDER BY date_time DESC LIMIT ?";
+    //console.log(fullQuery);
     db.each("SELECT * FROM Incidents " + whereQuery + "ORDER BY date_time DESC LIMIT ?", [limit], (err, row) => {
         incidentObj = {};
         incidentObj["case_number"] = row.case_number;
@@ -194,6 +194,7 @@ app.get('/incidents', (req, res) => { //NOT QUITE WORKING YET
         incidentObj["incident"] = row.incident;
         incidentObj["police_grid"] = row.police_grid;
         incidentObj["neighborhood_number"] = row.neighborhood_number;
+        incidentObj["neighborhood_name"] = row.neighborhood_name;
         incidentObj["block"] = row.block;
         incidentArray.push(incidentObj);            
     }, ()=> {
